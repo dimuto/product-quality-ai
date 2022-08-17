@@ -4,3 +4,6 @@ YOLOv6/
 
 # Data
 data/
+
+# Virtual environment
+venv/
