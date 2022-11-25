@@ -8,3 +8,8 @@ data/
 # Virtual environment
 venv/
 .DS_Store
+aws/
+**/__pycache__/
+
+# Output
+src/output/

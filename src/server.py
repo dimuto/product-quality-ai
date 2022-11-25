@@ -1,26 +1,33 @@
 import flask
 from PIL import Image
 import io
-from prediction import inference
-from flask import Flask
+from flask import Flask, request
+
+import numpy as np
+import pandas as pd
+
+from detect import run 
+
 app = Flask(__name__)
 
+# text - http://127.0.0.1:5000/?length=60
 @app.route("/", methods=["GET"])
-def home():
-    return "Hello World!"
-
-@app.route("/predict", methods=["POST"])
 def predict():
-    data = {"success": False}
-    if flask.request.files.get("image"):
-        image = flask.request.files["image"].read()
-        image = Image.open(io.BytesIO(image))
+    length = request.args.get("length")
+    prediction = int(length) * int(length)
+    return str(prediction)
 
-        result = inference(image)
+# file - use postman
+@app.route("/predict_file", methods=["POST"])
+def predict_file():
+    input_data = pd.read_csv(request.files.get("input_file"))
+    prediction = list(input_data) * 10
+    return str(list(prediction))
 
-        data["response"] = result
-        data["success"] = True
-    return flask.jsonify(data)
+# image
+@app.route("/product_ai", methods=["POST"])
+def predict_defect():
+    run(source=request.files.get("input_file"))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
