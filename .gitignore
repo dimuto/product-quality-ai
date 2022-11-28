@@ -8,6 +8,9 @@ data/
 # Virtual environment
 venv/
 .DS_Store
+aws/
+**/__pycache__/
 
-# Results
+# Output
+src/output/
 results/
