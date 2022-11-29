@@ -17,8 +17,6 @@ class Predict:
         self.model_ft = self.model_ft.to(self.device)
 
     def predict_model(self, test_image_path):
-        
-
         d = Dataloader()
         transform = d.data_transforms['val']
 
@@ -40,6 +38,7 @@ class Predict:
             prob = nnf.softmax(out, dim=1)
             top_p, top_class = prob.topk(1, dim = 1)
             # print(prob)
-            print("Output class :  ", IDX_TO_CLASS[top_class.cpu().numpy()[0][0]])
-            print("PQ score: ", prob.cpu().numpy()[0][1])
+            # print("Output class :  ", IDX_TO_CLASS[top_class.cpu().numpy()[0][0]])
+            # print("PQ score: ", prob.cpu().numpy()[0][1])
+            return prob.cpu().numpy()[0][1] # probability of defect class
              

@@ -1,3 +1,4 @@
+import os
 from dataloader import Dataloader
 from train import Train
 from predict import Predict
@@ -11,16 +12,39 @@ class Run:
     
     def run_prediction(self, test_image_path):
         p = Predict()
-        p.predict_model(test_image_path)
+
+        # Image file
+        if os.path.isfile(test_image_path):
+            defect_prob = p.predict_model(test_image_path)
+            pq_score = int(defect_prob * 10)
+
+            return pq_score
+        
+        # Images in folder
+        elif os.path.isdir(test_image_path):
+            probs = []
+            for i in os.listdir(test_image_path):
+                try:
+                    defect_prob = p.predict_model(os.path.join(test_image_path, i))
+                    probs.append(defect_prob)
+                except Exception as e:
+                    print(e)
+            print(probs)
+            avg = sum(probs) / len(probs)
+            pq_score = int(avg * 10)
+
+            return pq_score
+
 
 
 if __name__ == "__main__":
     mode = "predict"
-    test_image_path = "../data/crops/test/a3.png"
+    test_image_path = "../data/crops/test/a1.png"
 
     if mode == "train":
         r = Run()
         r.run_training()
     else:
         r = Run()
-        r.run_prediction(test_image_path)
+        pq_score = r.run_prediction(test_image_path)
+        print(pq_score)
