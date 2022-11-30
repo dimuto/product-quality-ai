@@ -1,7 +1,7 @@
 import os
-from dataloader import Dataloader
-from train import Train
-from predict import Predict
+from classification.dataloader import Dataloader
+from classification.train import Train
+from classification.predict import Predict
 
 class Run:
     def run_training(self):
@@ -39,7 +39,7 @@ class Run:
 
 if __name__ == "__main__":
     mode = "predict"
-    test_image_path = "../data/crops/test/a1.png"
+    test_image_path = "../data/IMG_20190816_154429.jpg"
 
     if mode == "train":
         r = Run()

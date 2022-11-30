@@ -11,7 +11,7 @@ import os
 cudnn.benchmark = True
 plt.ion()   # interactive mode
 
-from config import DATA_DIR
+from classification.config import DATA_DIR
 
 # Data augmentation and normalization for training
 # Just normalization for validation

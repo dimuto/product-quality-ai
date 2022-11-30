@@ -9,8 +9,8 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 
-from model import Model
-from config import NUM_EPOCHS, MODEL_PATH
+from classification.model import Model
+from classification.config import NUM_EPOCHS, MODEL_PATH
 
 class Train:
     def __init__(self, dataloaders, dataset_sizes, class_names):

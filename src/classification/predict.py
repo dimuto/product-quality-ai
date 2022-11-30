@@ -1,19 +1,29 @@
+# import os
+# import sys
+# from pathlib import Path
+# FILE = Path(__file__).resolve()
+# ROOT = FILE.parents[0]  # YOLOv5 root directory
+# if str(ROOT) not in sys.path:
+#     sys.path.append(str(ROOT))  # add ROOT to PATH
+# ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
 import torch
 from PIL import Image
 import matplotlib.pyplot as plt
 import torch.nn.functional as nnf
 
-from dataloader import Dataloader
-from model import Model
-from config import MODEL_PATH, IDX_TO_CLASS
+from classification.dataloader import Dataloader
+from classification.model import Model
+from classification.config import MODEL_PATH, IDX_TO_CLASS
 
 class Predict:
     def __init__(self):
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
         m = Model()
         self.model_ft = m.initialize_model()
-        self.model_ft.load_state_dict(torch.load(MODEL_PATH))
+        self.model_ft.load_state_dict(torch.load(MODEL_PATH, map_location=self.device))
 
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model_ft = self.model_ft.to(self.device)
 
     def predict_model(self, test_image_path):
