@@ -24,7 +24,6 @@ def ai_pipeline(image_input_dir):
 
     # 3. Delete crops images and folder
     shutil.rmtree(detection_output_dir)
-    # print("Deleted crops")
 
     return defect_acceptance_level, pq_score
 
