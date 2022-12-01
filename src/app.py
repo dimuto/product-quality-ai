@@ -41,6 +41,7 @@ def get_ai_prediction():
     
     if request.method == "POST":
 
+        # 1. Download files 
         ## Receive one s3 image url
         if request.form.get("s3_path"):
             s3_path = request.form.get("s3_path")
@@ -55,14 +56,15 @@ def get_ai_prediction():
 
         ## Receive image file directly
         elif request.files["image"]:
-            file = request.files["image"] # check if can run with jpg
+            file = request.files["image"] # works for jpg -> check if can run with jpg
             filename = file.filename
             file_path = os.path.join(data_dir, filename)
             file.save(file_path)
 
+        # 2. Run Product Quality AI
         defect_acceptance_level, pq_score = ai_pipeline(file_path)
         
-        # Remove downloaded files
+        # 3. Remove downloaded files
         if os.path.isfile(file_path):
             os.remove(file_path)
         elif os.path.isdir(file_path):
