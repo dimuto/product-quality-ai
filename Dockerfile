@@ -10,5 +10,5 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 # run python script
 COPY . . 
 WORKDIR "src"
-EXPOSE 5000
-CMD ["python3", "-m", "app", "--host=0.0.0.0", "--port=5000"]
+EXPOSE 8080
+CMD ["python3", "-m", "app", "--host=0.0.0.0", "--port=8080"]
