@@ -10,4 +10,4 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 # run python script
 COPY . . 
 WORKDIR "src"
-CMD ["python", "app.py"]
+CMD ["python3", "-m", "app", "--host=0.0.0.0"]
