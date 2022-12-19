@@ -12,6 +12,7 @@ if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
 from run import ai_pipeline
+from keys import ACCESS_ID, ACCESS_KEY
 
 from flask import Flask, request, jsonify, send_file
 
@@ -22,13 +23,18 @@ BUCKET_NAME = "dimuto-live"
 # FILENAME = "defect_raw/defect_goods_received/2021-07-26-11-05-37-1627272405.jpg"
 # FILENAME = "s3://product-quality-ai/defect_raw/defect_goods_received/2021-07-26-11-05-37-1627272405.jpg"
 
+def remove_prefix(text, prefix):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text
+
 def download(file_name, bucket):
     if not os.path.exists("data"):
         os.makedirs("data")
     try:
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
         output = f"data/{os.path.basename(file_name)}"
-        s3.Bucket(bucket).download_file(file_name.removeprefix(f"s3://{bucket}/"), output)
+        s3.Bucket(bucket).download_file(remove_prefix(file_name, f"s3://{bucket}/"), output)
         return output
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "404":
@@ -86,4 +92,9 @@ def get_ai_prediction():
         
 
 if __name__ == '__main__' :
-    app.run(debug=True)
+    # # Development
+    # app.run(debug=True)
+
+    # Production
+    from waitress import serve
+    serve(app)
