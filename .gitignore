@@ -14,3 +14,6 @@ aws/
 # Output
 src/output/
 results/
+
+# AWS access keys
+keys.py
