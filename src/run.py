@@ -27,15 +27,18 @@ def ai_pipeline(image_input_dir):
         else:
             defect_acceptance_level = "acceptable"
 
+        error = ""
+
         # # 3. Delete crops images and folder
         # shutil.rmtree(detection_output_dir)
 
     # If no fruits detected, return error
     else:
-        defect_acceptance_level = "unacceptable"
-        pq_score = "unable to detect fruit"
+        defect_acceptance_level = ""
+        pq_score = ""
+        error = "poor image quality"
 
-    return defect_acceptance_level, pq_score
+    return defect_acceptance_level, pq_score, error
 
 if __name__ == "__main__":
     # image_input_dir = "../data/evaluate/PPCO0014800130"

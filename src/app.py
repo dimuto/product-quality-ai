@@ -72,7 +72,7 @@ def get_ai_prediction():
             file.save(file_path)
 
         # 2. Run Product Quality AI
-        defect_acceptance_level, pq_score = ai_pipeline(file_path)
+        defect_acceptance_level, pq_score, error = ai_pipeline(file_path)
         
         # 3. Remove downloaded files
         if os.path.isfile(file_path):
@@ -88,7 +88,8 @@ def get_ai_prediction():
         # }
         return jsonify({
             "defect_acceptance_level" : defect_acceptance_level,
-            "pq_score" : pq_score
+            "pq_score" : pq_score,
+            "error": error
         })
 
         
