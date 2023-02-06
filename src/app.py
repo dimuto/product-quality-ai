@@ -18,10 +18,6 @@ from flask import Flask, request, jsonify, send_file
 
 app = Flask(__name__)
 
-BUCKET_NAME = "dimuto-live" 
-# # Test
-# FILENAME = "defect_raw/defect_goods_received/2021-07-26-11-05-37-1627272405.jpg"
-# FILENAME = "s3://product-quality-ai/defect_raw/defect_goods_received/2021-07-26-11-05-37-1627272405.jpg"
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
@@ -47,17 +43,25 @@ def get_ai_prediction():
     
     if request.method == "POST":
 
+        bucket_name = request.json["bucket"]
+
         # 1. Download files 
         ## Receive one s3 image url
         if request.form.get("s3_path"):
             s3_path = request.form.get("s3_path")
-            file_path = download(s3_path, BUCKET_NAME)
+            file_path = download(s3_path, bucket_name)
 
         ## Receive an array of s3 image url
+        # sample:
+        #  {
+        #     "s3_path":["s3://dimuto-live/jobs/image.jpg","s3://dimuto-live/jobs/image2.jpg"]
+        # }
         elif request.json:
             json = request.json
+
+            # for each image, download from s3
             for s3_path in json["s3_path"]:
-                file_path = download(s3_path, BUCKET_NAME)
+                file_path = download(s3_path, bucket_name)
             file_path = os.path.dirname(file_path)
 
         ## Receive image file directly
@@ -76,25 +80,23 @@ def get_ai_prediction():
         elif os.path.isdir(file_path):
             shutil.rmtree(file_path)
 
+        # 4. Return a json output
+        # sample: 
+        # {
+        #     "defect_acceptance_level": "acceptable",
+        #     "pq_score": 5
+        # }
         return jsonify({
             "defect_acceptance_level" : defect_acceptance_level,
             "pq_score" : pq_score
         })
 
-
-    # ## Send images 
-    # if request.method == "GET":
-    #     output = download(FILENAME, BUCKET_NAME)
-    #     return send_file(output, as_attachment=True)
-
-    ## integration with DPL
-    # authorisation for username and pw
         
 
 if __name__ == '__main__' :
-    # # Development
-    # app.run(debug=True)
+    # Development
+    app.run(debug=True)
 
-    # Production
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=80)
+    # # Production
+    # from waitress import serve
+    # serve(app, host="0.0.0.0", port=80)
