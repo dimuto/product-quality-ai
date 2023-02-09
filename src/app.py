@@ -11,7 +11,7 @@ data_dir = os.path.join(ROOT, "data")
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
-from run import ai_pipeline
+from ai_pipeline import ai_pipeline
 from keys import ACCESS_ID, ACCESS_KEY
 
 from flask import Flask, request, jsonify, send_file
@@ -84,6 +84,7 @@ def get_ai_prediction():
         # sample: 
         # {
         #     "defect_acceptance_level": "acceptable",
+        #     "error": "",
         #     "pq_score": 5
         # }
         return jsonify({
