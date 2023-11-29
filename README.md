@@ -54,6 +54,48 @@ Score of individual fruit from classification model -> Average score of the frui
 
 The model uses images from common fruits like apples, pineapples and bananas. These images can be found in the s3 bucket (product-quality-ai).
 
+#### Training Defect Model
+
+1. Prepare data - label data using any object detection labelling tool for YOLO model e.g. labelImg (https://github.com/HumanSignal/labelImg)
+
+2. Edit config file (`src/detection/config.py`) with training data path (`DATA_DIR`)
+
+Format of training data dir: 
+"""
+defect_training_data/
+├── train/
+│   ├── defect/
+│   └── no_defect/
+└── val/
+    ├── defect/
+    └── no_defect/
+"""
+
+3. Run model training (`yolov5/train.py`) using the command line e.g. `python path/to/train.py --data coco128.yaml --weights yolov5s.pt --img 640`
+
+#### Training Classification Model
+
+1. Prepare data - label data by putting them into different folders 
+
+Format of training data dir: 
+"""
+crops/
+├── train/
+│   ├── defect/
+│   └── no_defect/
+└── val/
+    ├── defect/
+    └── no_defect/
+"""
+
+2. Edit config file (`src/classification/config.py`) with training data path (`DATA_DIR`)
+
+3. Run model training (`src/classification/run.py`) and change `mode = "train"`
+
+### Model Prediction
+
+To test the product quality score of an image, run `src/ai_pipeline.py` and change `image_input_dir`
+
 ### Model Performance
 
 With the validation set, the detection model achieved a score of 78.2% accuracy. The classification model achieved a score of 83.4% accuracy.
